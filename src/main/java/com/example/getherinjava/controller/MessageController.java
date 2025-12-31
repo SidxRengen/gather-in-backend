@@ -1,8 +1,8 @@
 package com.example.getherinjava.controller;
 
 import com.example.getherinjava.dto.MessageRequest;
-import com.example.getherinjava.dto.ResponseBody;
-import com.example.getherinjava.dto.MessageResponse;
+import com.example.getherinjava.dto.ObjectResponse;
+import com.example.getherinjava.dto.ArrayResponse;
 import com.example.getherinjava.entry.Message;
 import com.example.getherinjava.entry.User;
 import com.example.getherinjava.repository.MessageRepository;
@@ -36,13 +36,13 @@ public class MessageController {
         User receiver = userRepository.findByEmail(messageRequest.getReceiverEmail()).orElse(null);
         String content = messageRequest.getContent();
         if(receiver==null){
-            ResponseBody responseBody = new ResponseBody("No email found with this email!",false,new HashMap<>());
-            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+            ObjectResponse objectResponse = new ObjectResponse("No email found with this email!",false,new HashMap<>());
+            return new ResponseEntity<>(objectResponse, HttpStatus.BAD_REQUEST);
         }
         Message newMessage = new Message(content,sender,receiver);
         messageRepository.save(newMessage);
-        ResponseBody responseBody = new ResponseBody("Message has beed Send!",true,new HashMap<>());
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        ObjectResponse objectResponse = new ObjectResponse("Message has beed Send!",true,new HashMap<>());
+        return new ResponseEntity<>(objectResponse, HttpStatus.OK);
     }
 
     @GetMapping("/chat/{receiver_email}")
@@ -50,8 +50,8 @@ public class MessageController {
         User sender =  userRepository.findByEmail(authentication.getName()).orElse(null);
         User receiver = userRepository.findByEmail(receiver_email).orElse(null);
         if(receiver==null){
-            ResponseBody responseBody = new ResponseBody("No user found with this email!",false,new HashMap<>());
-            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+            ObjectResponse objectResponse = new ObjectResponse("No user found with this email!",false,new HashMap<>());
+            return new ResponseEntity<>(objectResponse, HttpStatus.BAD_REQUEST);
         }
         List<Message> messages = messageRepository.findAll();
         List<Map<String,String>> userMessages = new ArrayList<>();
@@ -61,11 +61,12 @@ public class MessageController {
                 msg.put("senderEmail",message.getSender().getEmail());
                 msg.put("senderUserName",message.getSender().getUserName());
                 msg.put("content",message.getContent());
+                msg.put("timestamp",message.getTimestamp().toString());
                 userMessages.add(msg);
             }
         }
-        MessageResponse messageResponse = new MessageResponse("Message has been fetched successfully!",true,userMessages);
-        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
+        ArrayResponse arrayResponse = new ArrayResponse("Message has been fetched successfully!",true,userMessages);
+        return new ResponseEntity<>(arrayResponse, HttpStatus.OK);
     }
 
 }

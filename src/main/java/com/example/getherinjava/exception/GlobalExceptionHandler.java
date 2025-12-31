@@ -1,6 +1,6 @@
 package com.example.getherinjava.exception;
 
-import com.example.getherinjava.dto.ResponseBody;
+import com.example.getherinjava.dto.ObjectResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage())
         );
 
-        ResponseBody response = new ResponseBody(
+        ObjectResponse response = new ObjectResponse(
                 "Validation failed",
                 false,
                 errors

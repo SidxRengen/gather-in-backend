@@ -1,17 +1,15 @@
 package com.example.getherinjava.dto;
 
-import com.example.getherinjava.entry.Message;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MessageResponse {
+public class ArrayResponse {
     private String message;
     private boolean success;
     private List<Map<String,String>> data = new ArrayList<>();
 
-    public MessageResponse(String message, boolean success, List<Map<String,String>> data1) {
+    public ArrayResponse(String message, boolean success, List<Map<String,String>> data1) {
         this.message = message;
         this.success = success;
         this.data = data1;

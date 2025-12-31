@@ -2,12 +2,12 @@ package com.example.getherinjava.dto;
 
 import java.util.Map;
 
-public class ResponseBody {
+public class ObjectResponse {
     private String message;
     private boolean success;
     private Map<String,String> data;
 
-    public ResponseBody(String message, boolean success, Map<String, String> data) {
+    public ObjectResponse(String message, boolean success, Map<String, String> data) {
         this.message = message;
         this.success = success;
         this.data = data;

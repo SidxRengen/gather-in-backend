@@ -1,15 +1,12 @@
 package com.example.getherinjava.controller;
 
 
-import com.example.getherinjava.dto.ResponseBody;
 import com.example.getherinjava.dto.socket.MessageRequest;
 import com.example.getherinjava.entry.Message;
 import com.example.getherinjava.entry.User;
 import com.example.getherinjava.repository.MessageRepository;
 import com.example.getherinjava.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -49,16 +46,19 @@ public class MessageSocketController {
         System.out.println("Receiver found: " + receiver);
 
         if (sender == null || receiver == null) {
-            System.out.println("❌ Sender or receiver not found. Aborting message save.");
+            System.out.println("Sender or receiver not found. Aborting message save.");
             return;
         }
 
+        userRepository.save(receiver);
+        userRepository.save(sender);
         Message message = new Message(messageRequest.getContent(),sender,receiver);
         messageRepository.save(message);
         Map<String,String> msg = new HashMap<>();
         msg.put("senderEmail",message.getSender().getEmail());
         msg.put("senderUserName",message.getSender().getUserName());
         msg.put("content",message.getContent());
+        msg.put("timestamp",message.getTimestamp().toString());
         simpMessagingTemplate.convertAndSend("/queue/messages/"+messageRequest.getReceiverEmail(), msg);
         simpMessagingTemplate.convertAndSend("/queue/messages/"+messageRequest.getSenderEmail(), msg);
     }
