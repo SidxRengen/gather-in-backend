@@ -23,6 +23,18 @@ public class User {
     @CreationTimestamp
     @Column(nullable = false,updatable = false)
     private LocalDateTime timestamp;
+
+    @Column
+    private String photoUrl;
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
     protected User() {
     }
 
