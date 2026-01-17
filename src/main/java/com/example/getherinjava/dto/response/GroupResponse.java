@@ -1,18 +1,21 @@
-package com.example.getherinjava.dto;
+package com.example.getherinjava.dto.response;
 
-import java.util.ArrayList;
+import com.example.getherinjava.entry.Group;
+import com.example.getherinjava.entry.User;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.List;
 import java.util.Map;
 
-public class ArrayResponse {
+public class GroupResponse {
     private String message;
     private boolean success;
-    private List<Map<String,String>> data = new ArrayList<>();
+    private Group group;
 
-    public ArrayResponse(String message, boolean success, List<Map<String,String>> data1) {
+    public GroupResponse(String message, boolean success, Group group) {
         this.message = message;
         this.success = success;
-        this.data = data1;
+        this.group = group;
     }
 
     public String getMessage() {
@@ -31,11 +34,11 @@ public class ArrayResponse {
         this.success = success;
     }
 
-    public List<Map<String,String>> getData() {
-        return data;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setData(List<Map<String,String>> data) {
-        this.data = data;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

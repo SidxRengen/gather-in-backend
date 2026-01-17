@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 //@Table(name = "users")
@@ -20,12 +21,13 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column
+    private String photoUrl;
+
     @CreationTimestamp
     @Column(nullable = false,updatable = false)
     private LocalDateTime timestamp;
 
-    @Column
-    private String photoUrl;
 
     public String getPhotoUrl() {
         return photoUrl;
@@ -34,6 +36,7 @@ public class User {
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
+
 
     protected User() {
     }

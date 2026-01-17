@@ -1,9 +1,10 @@
 package com.example.getherinjava.controller;
 
 import com.example.getherinjava.config.JwtUtil;
-import com.example.getherinjava.dto.LoginRequest;
-import com.example.getherinjava.dto.SignupRequest;
-import com.example.getherinjava.dto.ObjectResponse;
+import com.example.getherinjava.dto.request.LoginRequest;
+import com.example.getherinjava.dto.request.SignupRequest;
+import com.example.getherinjava.dto.response.ObjectResponse;
+import com.example.getherinjava.dto.request.MessageRequest;
 import com.example.getherinjava.entry.User;
 import com.example.getherinjava.repository.UserRepository;
 import jakarta.validation.Valid;

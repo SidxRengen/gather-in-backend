@@ -1,4 +1,4 @@
-package com.example.getherinjava.dto;
+package com.example.getherinjava.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

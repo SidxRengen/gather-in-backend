@@ -1,20 +1,18 @@
-package com.example.getherinjava.dto;
-
-import com.example.getherinjava.entry.Message;
-import com.example.getherinjava.entry.User;
+package com.example.getherinjava.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class UserResponse {
+public class ArrayResponse {
     private String message;
     private boolean success;
-    private List<User> data = new ArrayList<>();
+    private List<Map<String,String>> data = new ArrayList<>();
 
-    public UserResponse(String message, boolean success, List<User> data) {
+    public ArrayResponse(String message, boolean success, List<Map<String,String>> data1) {
         this.message = message;
         this.success = success;
-        this.data = data;
+        this.data = data1;
     }
 
     public String getMessage() {
@@ -33,11 +31,11 @@ public class UserResponse {
         this.success = success;
     }
 
-    public List<User> getData() {
+    public List<Map<String,String>> getData() {
         return data;
     }
 
-    public void setData(List<User> data) {
+    public void setData(List<Map<String,String>> data) {
         this.data = data;
     }
 }

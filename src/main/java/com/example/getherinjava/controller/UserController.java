@@ -1,8 +1,7 @@
 package com.example.getherinjava.controller;
 
-import com.example.getherinjava.dto.ArrayResponse;
-import com.example.getherinjava.dto.ObjectResponse;
-import com.example.getherinjava.dto.UserResponse;
+import com.example.getherinjava.dto.response.ArrayResponse;
+import com.example.getherinjava.dto.response.ObjectResponse;
 import com.example.getherinjava.entry.User;
 import com.example.getherinjava.repository.MessageRepository;
 import com.example.getherinjava.repository.UserRepository;

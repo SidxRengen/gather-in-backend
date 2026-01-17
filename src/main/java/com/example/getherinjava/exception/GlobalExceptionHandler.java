@@ -1,6 +1,6 @@
 package com.example.getherinjava.exception;
 
-import com.example.getherinjava.dto.ObjectResponse;
+import com.example.getherinjava.dto.response.ObjectResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

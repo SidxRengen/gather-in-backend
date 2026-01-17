@@ -1,13 +1,13 @@
-package com.example.getherinjava.dto;
+package com.example.getherinjava.dto.response;
 
 import java.util.Map;
 
-public class ObjectResponse {
+public class ObjectResponseDTO {
     private String message;
     private boolean success;
-    private Map<String,String> data;
+    private Object data;
 
-    public ObjectResponse(String message, boolean success, Map<String, String> data) {
+    public ObjectResponseDTO(String message, boolean success, Object data) {
         this.message = message;
         this.success = success;
         this.data = data;
@@ -29,11 +29,11 @@ public class ObjectResponse {
         this.success = success;
     }
 
-    public Map<String, String> getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(Map<String, String> data) {
+    public void setData(Object data) {
         this.data = data;
     }
 }

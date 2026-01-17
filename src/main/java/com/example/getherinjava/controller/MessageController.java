@@ -1,8 +1,8 @@
 package com.example.getherinjava.controller;
 
-import com.example.getherinjava.dto.MessageRequest;
-import com.example.getherinjava.dto.ObjectResponse;
-import com.example.getherinjava.dto.ArrayResponse;
+import com.example.getherinjava.dto.request.MessageRequest;
+import com.example.getherinjava.dto.response.ObjectResponse;
+import com.example.getherinjava.dto.response.ArrayResponse;
 import com.example.getherinjava.entry.Message;
 import com.example.getherinjava.entry.User;
 import com.example.getherinjava.repository.MessageRepository;
@@ -61,6 +61,7 @@ public class MessageController {
                 msg.put("senderEmail",message.getSender().getEmail());
                 msg.put("senderUserName",message.getSender().getUserName());
                 msg.put("content",message.getContent());
+                msg.put("photo",message.getSender().getPhotoUrl());
                 msg.put("timestamp",message.getTimestamp().toString());
                 userMessages.add(msg);
             }
