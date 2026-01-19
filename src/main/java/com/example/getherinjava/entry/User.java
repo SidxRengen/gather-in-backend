@@ -28,6 +28,16 @@ public class User {
     @Column(nullable = false,updatable = false)
     private LocalDateTime timestamp;
 
+    @Column
+    private String wallpaper;
+
+    public String getWallpaper() {
+        return wallpaper;
+    }
+
+    public void setWallpaper(String wallpaper) {
+        this.wallpaper = wallpaper;
+    }
 
     public String getPhotoUrl() {
         return photoUrl;

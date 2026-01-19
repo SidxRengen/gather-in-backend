@@ -54,6 +54,7 @@ public class MessageController {
             return new ResponseEntity<>(objectResponse, HttpStatus.BAD_REQUEST);
         }
         List<Message> messages = messageRepository.findAll();
+//        System.out.println(messages);
         List<Map<String,String>> userMessages = new ArrayList<>();
         for(Message message:messages){
             if ((message.getReceiver()==sender&&message.getSender()==receiver)||(message.getSender()==sender&&message.getReceiver()==receiver)){

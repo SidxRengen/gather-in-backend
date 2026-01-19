@@ -15,10 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/group")
@@ -124,7 +121,15 @@ public class GroupController {
         }
 
         List<Object[]> rawData = groupRepository.getActiveGroup(userEmail);
-
+        if (rawData == null || rawData.isEmpty()) {
+            return ResponseEntity.ok(
+                    new ArrayObjectResponse(
+                            "No active groups found",
+                            true,
+                            Collections.emptyList()
+                    )
+            );
+        }
         List<Map<String, Object>> response = rawData.stream().map(obj -> {
             Map<String, Object> m = new HashMap<>();
             m.put("id", (Long) obj[0]);

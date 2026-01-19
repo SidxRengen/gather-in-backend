@@ -1,6 +1,8 @@
 package com.example.getherinjava.controller;
 
+import com.example.getherinjava.dto.response.ArrayObjectResponse;
 import com.example.getherinjava.dto.response.ArrayResponse;
+import com.example.getherinjava.dto.response.GeneralResponse;
 import com.example.getherinjava.dto.response.ObjectResponse;
 import com.example.getherinjava.entry.User;
 import com.example.getherinjava.repository.MessageRepository;
@@ -13,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -64,37 +63,39 @@ public class UserController {
         List<Object[]> senderUsers = messageRepository.findSenderUser(userEmail);
         List<Object[]> receiverUsers = messageRepository.findReceiverUser(userEmail);
 
+        if (receiverUsers !=null && !receiverUsers.isEmpty()) {
+            for (Object[] row : receiverUsers) {
+                Map<String, Object> userMap = new HashMap<>();
+                userMap.put("userName", (String) row[0]);
+                userMap.put("email", (String) row[1]);
+                userMap.put("photoUrl", (String) row[2]);
+                userMap.put("timestamp", (LocalDateTime) row[3]);
 
-        for (Object[] row : receiverUsers) {
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("userName", (String) row[0]);
-            userMap.put("email", (String) row[1]);
-            userMap.put("photoUrl", (String) row[2]);
-            userMap.put("timestamp", (LocalDateTime) row[3]);
-
-            latestChats.put((String) row[1], userMap);
+                latestChats.put((String) row[1], userMap);
+            }
         }
+        if (senderUsers !=null && !senderUsers.isEmpty()) {
 
 
-        for (Object[] row : senderUsers) {
-            String email = (String) row[1];
-            LocalDateTime newTime = (LocalDateTime) row[3];
+            for (Object[] row : senderUsers) {
+                String email = (String) row[1];
+                LocalDateTime newTime = (LocalDateTime) row[3];
 
-            latestChats.merge(
-                    email,
-                    new HashMap<>() {{
-                        put("userName", (String) row[0]);
-                        put("email", email);
-                        put("photoUrl", (String) row[2]);
-                        put("timestamp", newTime);
-                    }},
-                    (oldVal, newVal) -> {
-                        LocalDateTime oldTime = (LocalDateTime) oldVal.get("timestamp");
-                        return oldTime.isAfter(newTime) ? oldVal : newVal;
-                    }
-            );
+                latestChats.merge(
+                        email,
+                        new HashMap<>() {{
+                            put("userName", (String) row[0]);
+                            put("email", email);
+                            put("photoUrl", (String) row[2]);
+                            put("timestamp", newTime);
+                        }},
+                        (oldVal, newVal) -> {
+                            LocalDateTime oldTime = (LocalDateTime) oldVal.get("timestamp");
+                            return oldTime.isAfter(newTime) ? oldVal : newVal;
+                        }
+                );
+            }
         }
-
         List<Map<String, String>> response = new ArrayList<>();
 
         for (Map<String, Object> user : latestChats.values()) {
@@ -163,7 +164,43 @@ public class UserController {
         m.put("userName",user.getUserName());
         m.put("email",user.getEmail());
         m.put("photo",user.getPhotoUrl());
+        m.put("wallpaper",user.getWallpaper());
         m.put("timestamp",user.getTimestamp().toString());
         return new ResponseEntity<>(new ObjectResponse("user profile has been fetched successfully!",true,m),HttpStatus.OK);
+    }
+
+    @PostMapping("/update-wallpaper")
+    public ResponseEntity<?> addWallpaper(
+            @RequestParam("file") MultipartFile file,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+
+        if (file.isEmpty()) {
+            ArrayResponse responseBody = new ArrayResponse("File is empty", false, new ArrayList<>());
+            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
+        if (!file.getContentType().startsWith("image/")) {
+            ArrayResponse responseBody = new ArrayResponse("Only images allowed", false, new ArrayList<>());
+            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
+        if (file.getSize() > 4 * 1024 * 1024) {
+            ArrayResponse responseBody = new ArrayResponse("Max size 4MB", false, new ArrayList<>());
+            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+        }
+
+        String photoUrl = userService.uploadImage(file);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setWallpaper(photoUrl);
+        userRepository.save(user);
+        Map<String,String> m = new HashMap<>();
+        m.put("wallpaper",photoUrl);
+        GeneralResponse responseBody = new GeneralResponse("Wallpaper Uploaded Successfully!", true, m);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 }
