@@ -1,5 +1,6 @@
 package com.example.getherinjava.controller;
 
+import com.example.getherinjava.dto.request.SettingRequest;
 import com.example.getherinjava.dto.response.ArrayObjectResponse;
 import com.example.getherinjava.dto.response.ArrayResponse;
 import com.example.getherinjava.dto.response.GeneralResponse;
@@ -165,6 +166,8 @@ public class UserController {
         m.put("email",user.getEmail());
         m.put("photo",user.getPhotoUrl());
         m.put("wallpaper",user.getWallpaper());
+        m.put("opacity",String.valueOf(user.getOpacity()));
+        m.put("blur",user.getBlur());
         m.put("timestamp",user.getTimestamp().toString());
         return new ResponseEntity<>(new ObjectResponse("user profile has been fetched successfully!",true,m),HttpStatus.OK);
     }
@@ -201,6 +204,24 @@ public class UserController {
         Map<String,String> m = new HashMap<>();
         m.put("wallpaper",photoUrl);
         GeneralResponse responseBody = new GeneralResponse("Wallpaper Uploaded Successfully!", true, m);
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+    @PostMapping("/update-profile-settings")
+    public ResponseEntity<?> updateProfileSettings(@RequestBody SettingRequest settingRequest,Authentication authentication){
+        int opacity = settingRequest.opacity;
+        String blur = settingRequest.blur;
+        User user = userRepository.findByEmail(authentication.getName()).orElse(null);
+        if (user==null){
+            return new ResponseEntity<>(new ObjectResponse("user profile has been fetched successfully!",true,new HashMap<>()),HttpStatus.BAD_REQUEST);
+        }
+        user.setBlur(blur);
+        user.setOpacity(opacity);
+        userRepository.save(user);
+        Map<String,String> m = new HashMap<>();
+        m.put("opacity",String.valueOf(opacity));
+        m.put("blur",blur);
+        GeneralResponse responseBody = new GeneralResponse("Profile Setting Changed Successfully!", true, m);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 }

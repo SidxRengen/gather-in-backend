@@ -30,6 +30,27 @@ public class User {
 
     @Column
     private String wallpaper;
+    @Column
+    private int opacity;
+
+    public int getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(int opacity) {
+        this.opacity = opacity;
+    }
+
+    public String getBlur() {
+        return blur;
+    }
+
+    public void setBlur(String blur) {
+        this.blur = blur;
+    }
+
+    @Column
+    private String blur;
 
     public String getWallpaper() {
         return wallpaper;
