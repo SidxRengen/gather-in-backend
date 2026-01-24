@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group,Long> {
     @Query("""
-               SELECT g.id, g.name, g.photoUrl, MAX(gm.timestamp)
+               SELECT g.id, g.name, g.photoUrl, MAX(gm.timestamp), g.description
                FROM Group g
                LEFT JOIN GroupMessage gm ON gm.group = g
                LEFT JOIN g.members m

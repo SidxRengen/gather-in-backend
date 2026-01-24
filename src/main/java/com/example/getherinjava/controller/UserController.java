@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -60,7 +61,12 @@ public class UserController {
         }
 
         Map<String, Map<String, Object>> latestChats = new HashMap<>();
-
+        if(messageRepository.findAll().isEmpty()){
+            return new ResponseEntity<>(
+                    new ArrayResponse("No Active User is found", true, List.of()),
+                    HttpStatus.OK
+            );
+        }
         List<Object[]> senderUsers = messageRepository.findSenderUser(userEmail);
         List<Object[]> receiverUsers = messageRepository.findReceiverUser(userEmail);
 
@@ -173,38 +179,45 @@ public class UserController {
     }
 
     @PostMapping("/update-wallpaper")
-    public ResponseEntity<?> addWallpaper(
+    public ResponseEntity<GeneralResponse> updateWallpaper(
             @RequestParam("file") MultipartFile file,
             Authentication authentication
     ) {
         String email = authentication.getName();
 
         if (file.isEmpty()) {
-            ArrayResponse responseBody = new ArrayResponse("File is empty", false, new ArrayList<>());
-            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest()
+                    .body(new GeneralResponse("File is empty", false, Map.of()));
         }
 
-        if (!file.getContentType().startsWith("image/")) {
-            ArrayResponse responseBody = new ArrayResponse("Only images allowed", false, new ArrayList<>());
-            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            return ResponseEntity.badRequest()
+                    .body(new GeneralResponse("Only images allowed", false, Map.of()));
         }
 
         if (file.getSize() > 4 * 1024 * 1024) {
-            ArrayResponse responseBody = new ArrayResponse("Max size 4MB", false, new ArrayList<>());
-            return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest()
+                    .body(new GeneralResponse("Max size 4MB", false, Map.of()));
         }
 
         String photoUrl = userService.uploadImage(file);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found"
+                ));
 
         user.setWallpaper(photoUrl);
         userRepository.save(user);
-        Map<String,String> m = new HashMap<>();
-        m.put("wallpaper",photoUrl);
-        GeneralResponse responseBody = new GeneralResponse("Wallpaper Uploaded Successfully!", true, m);
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+
+        return ResponseEntity.ok(
+                new GeneralResponse(
+                        "Wallpaper uploaded successfully!",
+                        true,
+                        Map.of("wallpaper", photoUrl)
+                )
+        );
     }
 
     @PostMapping("/update-profile-settings")

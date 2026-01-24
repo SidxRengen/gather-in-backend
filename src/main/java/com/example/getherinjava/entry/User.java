@@ -31,7 +31,7 @@ public class User {
     @Column
     private String wallpaper;
     @Column
-    private int opacity;
+    private int opacity = 100;
 
     public int getOpacity() {
         return opacity;

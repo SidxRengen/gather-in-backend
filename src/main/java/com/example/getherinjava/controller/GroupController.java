@@ -5,6 +5,7 @@ import com.example.getherinjava.dto.request.GroupRequest;
 import com.example.getherinjava.dto.response.*;
 import com.example.getherinjava.entry.Group;
 import com.example.getherinjava.entry.User;
+import com.example.getherinjava.repository.GroupMessageRepository;
 import com.example.getherinjava.repository.GroupRepository;
 import com.example.getherinjava.repository.UserRepository;
 import com.example.getherinjava.service.UserService;
@@ -24,10 +25,12 @@ public class GroupController {
     GroupRepository groupRepository;
     UserRepository userRepository;
     UserService userService;
-    public GroupController(GroupRepository groupRepository,UserRepository userRepository,   UserService userService){
+    GroupMessageRepository groupMessageRepository;
+    public GroupController(GroupRepository groupRepository,UserRepository userRepository,   UserService userService,GroupMessageRepository groupMessageRepository){
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.userService= userService;
+        this.groupMessageRepository = groupMessageRepository;
     }
     String photoUrl = null;
 
@@ -119,7 +122,12 @@ public class GroupController {
                     HttpStatus.UNAUTHORIZED
             );
         }
-
+        if(groupMessageRepository.findAll().isEmpty()){
+            return new ResponseEntity<>(
+                    new ArrayResponse("No Active Group is found", true, List.of()),
+                    HttpStatus.OK
+            );
+        }
         List<Object[]> rawData = groupRepository.getActiveGroup(userEmail);
         if (rawData == null || rawData.isEmpty()) {
             return ResponseEntity.ok(
@@ -136,6 +144,7 @@ public class GroupController {
             m.put("userName", (String) obj[1]);
             m.put("photo", (String) obj[2]);
             m.put("timestamp", obj[3]);
+            m.put("description", obj[4]);
             return m;
         }).toList();
 

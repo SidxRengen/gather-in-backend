@@ -44,6 +44,7 @@ public class GroupMessageSocketController {
         groupMessageRepository.save(groupMessage);
         Map<String,String> msg = new HashMap<>();
         msg.put("senderEmail",groupMessage.getSender().getEmail());
+        msg.put("groupName",currentGroup.getName());
         msg.put("senderUserName",groupMessage.getSender().getUserName());
         msg.put("content",groupMessage.getContent());
         msg.put("photo",groupMessage.getSender().getPhotoUrl());
