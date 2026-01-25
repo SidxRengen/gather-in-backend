@@ -9,11 +9,20 @@ public class MessageRequest {
     private  String senderEmail;
     @NotBlank(message = "content cannot be blank")
     private String content;
-
-    public MessageRequest(String receiverEmail,String senderEmail,String content){
+    private String image;
+    public MessageRequest(String receiverEmail,String senderEmail,String content, String image){
         this.content = content;
         this.receiverEmail = receiverEmail;
         this.senderEmail = senderEmail;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getReceiverEmail() {

@@ -15,6 +15,9 @@ public class Message {
     @Column(nullable = false,length = 1000)
     private String content;
 
+    @Column
+    private String image;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
     private User sender;
@@ -27,14 +30,24 @@ public class Message {
     @Column(nullable = false,updatable = false)
     private LocalDateTime timestamp;
 
+
     protected Message(){
 
     }
 
-    public Message(String content, User sender, User receiver) {
+    public Message(String content, User sender, User receiver,String image) {
         this.content = content;
         this.sender = sender;
         this.receiver = receiver;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Long getId() {

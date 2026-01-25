@@ -52,12 +52,15 @@ public class MessageSocketController {
 
         userRepository.save(receiver);
         userRepository.save(sender);
-        Message message = new Message(messageRequest.getContent(),sender,receiver);
+        Message message = new Message(messageRequest.getContent(),sender,receiver,messageRequest.getImage());
         messageRepository.save(message);
         Map<String,String> msg = new HashMap<>();
         msg.put("senderEmail",message.getSender().getEmail());
         msg.put("senderUserName",message.getSender().getUserName());
         msg.put("content",message.getContent());
+        if (message.getImage() != null) {
+            msg.put("image",message.getImage());
+        }
         msg.put("timestamp",message.getTimestamp().toString());
         simpMessagingTemplate.convertAndSend("/queue/messages/"+messageRequest.getReceiverEmail(), msg);
         simpMessagingTemplate.convertAndSend("/queue/messages/"+messageRequest.getSenderEmail(), msg);

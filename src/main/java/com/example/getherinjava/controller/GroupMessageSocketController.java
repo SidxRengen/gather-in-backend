@@ -40,7 +40,7 @@ public class GroupMessageSocketController {
             return;
         }
         System.out.println(groupMessageRequest.getContent());
-        GroupMessage groupMessage = new GroupMessage(currentGroup,groupMessageRequest.content,sender);
+        GroupMessage groupMessage = new GroupMessage(currentGroup,groupMessageRequest.content,sender,groupMessageRequest.getImage());
         groupMessageRepository.save(groupMessage);
         Map<String,String> msg = new HashMap<>();
         msg.put("senderEmail",groupMessage.getSender().getEmail());
@@ -48,6 +48,9 @@ public class GroupMessageSocketController {
         msg.put("senderUserName",groupMessage.getSender().getUserName());
         msg.put("content",groupMessage.getContent());
         msg.put("photo",groupMessage.getSender().getPhotoUrl());
+        if (groupMessage.getImage() != null) {
+            msg.put("image",groupMessage.getImage());
+        }
         msg.put("timestamp",groupMessage.getTimestamp().toString());
         simpMessagingTemplate.convertAndSend("/queue/group/message/"+currentGroup.getId(),msg);
     }

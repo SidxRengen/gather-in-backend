@@ -35,6 +35,7 @@ public class GroupMessageController {
                 newMsg.put("senderUserName",msg.getSender().getUserName());
                 newMsg.put("content",msg.getContent());
                 newMsg.put("photo",msg.getSender().getPhotoUrl());
+                newMsg.put("image",msg.getImage());
                 newMsg.put("timestamp",msg.getTimestamp().toString());
                 return newMsg;
             }

@@ -18,10 +18,12 @@ public class GroupMessage {
     )
     private Group group;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id",nullable = false)
     private User sender;
+
+    @Column
+    private String image;
 
     @Column(nullable = false,length = 1000)
     private String content;
@@ -34,10 +36,19 @@ public class GroupMessage {
     }
 
     public GroupMessage(Group group, String content,
-                        User sender) {
+                        User sender,String image) {
         this.group = group;
         this.content = content;
         this.sender = sender;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public User getSender() {

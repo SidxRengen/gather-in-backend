@@ -13,11 +13,20 @@ public class GroupMessageRequest {
 
     @NotBlank(message = "Please select a valid group")
     public Long group_id;
-
-    public GroupMessageRequest(String content, Long group_id,String sender_email) {
+    public String image;
+    public GroupMessageRequest(String content, Long group_id,String sender_email,String image) {
         this.content = content;
         this.group_id = group_id;
         this.sender_email = sender_email;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getSender_email() {
